@@ -3,11 +3,50 @@ import { environment } from "@raycast/api";
 
 import fs from "fs";
 
+export enum STORAGE_OBJECTS {
+  TOPICS,
+}
+
 const SUPPORT_PATH = environment.supportPath;
 const TOPICS_PATH = `${SUPPORT_PATH}/topics.json`;
+const DEFAULT_TOPICS = [{ name: "Work" }];
 
 const trackEntryPath = (topic: Topic) => `${SUPPORT_PATH}/${topic.name}.json`;
 const entriesPath = (topic: Topic) => `${SUPPORT_PATH}/entries_${topic.name}.json`;
+
+const STORAGE_OBJECT_PATHS_MAP = new Map([
+  [STORAGE_OBJECTS.TOPICS, { path: TOPICS_PATH, defaultContent: JSON.stringify(DEFAULT_TOPICS) }],
+]);
+
+export function ensureStorageObjectsExist(objects: STORAGE_OBJECTS[]): boolean {
+  for (const storageObject of Object.values(objects)) {
+    let obj = STORAGE_OBJECT_PATHS_MAP.get(storageObject);
+    if (obj === undefined) {
+      console.error(`Error getting object ${storageObject}`);
+      return false;
+    }
+    const { path, defaultContent } = obj;
+
+    try {
+      fs.accessSync(path);
+    } catch (error) {
+      const err = error as NodeJS.ErrnoException;
+      if (err.code === "ENOENT") {
+        try {
+          fs.writeFileSync(path, defaultContent);
+        } catch (writeError) {
+          console.error(`Error creating file ${path}: ${writeError}`);
+          throw writeError;
+        }
+      } else {
+        console.error(`Error checking file ${path}: ${error}`);
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
 
 export function getTopics(): Topic[] | null {
   try {

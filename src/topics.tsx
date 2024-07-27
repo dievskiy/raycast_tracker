@@ -1,10 +1,13 @@
-import { ActionPanel, showToast, Toast, Action, List, Icon } from "@raycast/api";
-import { getTopics, deleteTopic, isTopicBeingTracked } from "./storage";
+import { ActionPanel, showToast, Toast, Action, List, Icon, Detail } from "@raycast/api";
+import { getTopics, deleteTopic, isTopicBeingTracked, STORAGE_OBJECTS } from "./storage";
 import { useEffect, useState } from "react";
 import { Topic } from "./types";
+import { useEnsureFiles } from "./hooks/useEnsureFiles";
 
 export default function Command() {
+  const objectsToEnsure = [STORAGE_OBJECTS.TOPICS];
   const [topics, setTopics] = useState<Topic[] | null>(null);
+  const { objectsExists } = useEnsureFiles(objectsToEnsure);
 
   function handleDelete(topicToDelete: Topic) {
     console.log(topicToDelete);
@@ -39,7 +42,9 @@ export default function Command() {
     setTopics(topics);
   }, []);
 
-  return (
+  return objectsExists === false ? (
+    <Detail markdown={`Error: Topics file not found`} />
+  ) : (
     <List isLoading={!topics}>
       {topics?.map((item, index) => (
         <TopicListItem key={item.name} item={item} index={index} handleDelete={handleDelete} />

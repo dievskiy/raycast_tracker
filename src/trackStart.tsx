@@ -1,4 +1,4 @@
-import { ActionPanel, showToast, Toast, Action, Form, closeMainWindow } from "@raycast/api";
+import { ActionPanel, showToast, Toast, Action, Form } from "@raycast/api";
 import { getTopics, getTrackEntry, startTrackEntry } from "./storage";
 import { useEffect, useState } from "react";
 import { Topic } from "./types";
