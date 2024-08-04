@@ -1,6 +1,7 @@
 export interface TrackEntry {
-  topic: Topic;
-  startTime: Date;
+  topicName: string;
+  startTime: number;
+  endTime: number | null;
 }
 
 export interface Topic {
