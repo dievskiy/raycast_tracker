@@ -3,6 +3,12 @@ import { environment } from "@raycast/api";
 
 import fs from "fs";
 
+export enum DATE_RANGE {
+  TODAY,
+  WEEK,
+  MONTH,
+  ALL_TIME,
+}
 export enum STORAGE_OBJECTS {
   TOPICS,
 }
@@ -89,8 +95,56 @@ export function getTrackEntry(topicName: string): TrackEntry | null {
   }
 }
 
+export function getEntriesForTopic(topicName: string, startDate: Date | null, endDate: Date | null): TrackEntry[] {
+  try {
+    if (!fs.existsSync(entriesPath(topicName))) {
+      return [];
+    }
+
+    const contents = fs.readFileSync(entriesPath(topicName));
+    console.log("Contents: " + contents.toString() + "Topic : " + topicName);
+
+    const entries = JSON.parse(contents.toString());
+
+    console.log(entries);
+    return entries.filter((entry: TrackEntry) => {
+      const entryDate = new Date(entry.startTime);
+
+      if (startDate === null || endDate === null) {
+        return true;
+      }
+
+      if (startDate == null) {
+        return entryDate <= endDate;
+      }
+
+      if (endDate == null) {
+        return entryDate >= startDate;
+      }
+
+      return entryDate >= startDate && entryDate <= endDate;
+    });
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+export function deleteEntry(entry: TrackEntry): boolean {
+  try {
+    const topic = entry.topicName;
+    const entries = getEntriesForTopic(topic, null, null);
+    const newEntries = entries.filter((e) => e.startTime !== entry.startTime);
+    fs.writeFileSync(entriesPath(topic), JSON.stringify(newEntries));
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
 export function isTopicBeingTracked(topic: Topic): boolean {
-  return fs.existsSync(trackEntryPath(topic));
+  return fs.existsSync(trackEntryPath(topic.name));
 }
 
 export function stopTrackEntry(topic: Topic): boolean {

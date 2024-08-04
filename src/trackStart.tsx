@@ -21,7 +21,7 @@ export default function Command() {
   }
 
   function checkEntryAlreadyTracked(topic: Topic): boolean {
-    const trackEntry = getTrackEntry(topic);
+    const trackEntry = getTrackEntry(topic.name);
 
     if (trackEntry !== null) {
       showToast(

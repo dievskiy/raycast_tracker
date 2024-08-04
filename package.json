@@ -37,10 +37,18 @@
       "subtitle": "",
       "description": "Add new topic",
       "mode": "view"
+    },
+    {
+      "name": "statistics",
+      "title": "View statistics",
+      "subtitle": "",
+      "description": "View statistics for tracked hours",
+      "mode": "view"
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.78.1"
+    "@raycast/api": "^1.78.1",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.8",
