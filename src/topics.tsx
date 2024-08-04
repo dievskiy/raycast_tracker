@@ -1,4 +1,4 @@
-import { ActionPanel, showToast, Toast, Action, List, Icon, Detail } from "@raycast/api";
+import { ActionPanel, showToast, Toast, Action, List, Icon, Detail, confirmAlert } from "@raycast/api";
 import { getTopics, deleteTopic, isTopicBeingTracked, STORAGE_OBJECTS } from "./storage";
 import { useEffect, useState } from "react";
 import { Topic } from "./types";
@@ -9,8 +9,20 @@ export default function Command() {
   const [topics, setTopics] = useState<Topic[] | null>(null);
   const { objectsExists } = useEnsureFiles(objectsToEnsure);
 
-  function handleDelete(topicToDelete: Topic) {
-    console.log(topicToDelete);
+  async function handleDelete(topicToDelete: Topic) {
+    const confirmed = await confirmAlert({
+      title: "Delete Topic",
+      message: `Are you sure you want to delete the topic "${topicToDelete.name}"? This will delete ALL tracked entries for this topic.`,
+      primaryAction: {
+        title: "Delete",
+        // @ts-ignore
+        style: Action.Style.Destructive,
+      },
+    });
+
+    if (!confirmed) {
+      return;
+    }
 
     if (topics === null) {
       showToast(Toast.Style.Failure, "Error parsing topics", "Please create a topic");
@@ -23,11 +35,11 @@ export default function Command() {
       return;
     }
 
-    const deleted = deleteTopic(topicToDelete);
-    if (!deleted) showToast(Toast.Style.Failure, "Error deleting topic", "Please try again");
-    else showToast(Toast.Style.Success, "Deleted topic", `Topic: ${topicToDelete.name}`);
-
-    if (deleted) {
+    const deleted = deleteTopic(topicToDelete, true);
+    if (!deleted) {
+      showToast(Toast.Style.Failure, "Error deleting topic", "Please try again");
+    } else {
+      showToast(Toast.Style.Success, "Deleted topic", `Topic: ${topicToDelete.name}`);
       const newTopics = topics.filter((topic) => topic.name !== topicToDelete.name);
       setTopics(newTopics);
     }

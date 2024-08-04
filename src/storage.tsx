@@ -186,7 +186,9 @@ export function startTrackEntry(topic: Topic): boolean {
   }
 }
 
-export function deleteTopic(topic: Topic): boolean {
+export function deleteTopic(topic: Topic, deleteAllEntries?: boolean): boolean {
+  let deletedTopicFile = false;
+
   try {
     const topics = getTopics();
     if (topics === null) {
@@ -195,8 +197,19 @@ export function deleteTopic(topic: Topic): boolean {
 
     const newTopics = topics.filter((t) => t.name !== topic.name);
     fs.writeFileSync(TOPICS_PATH, JSON.stringify(newTopics));
+
+    deletedTopicFile = true;
+
+    if (deleteAllEntries && fs.existsSync(entriesPath(topic.name))) {
+      console.log("Deleting all entries");
+      fs.unlinkSync(entriesPath(topic.name));
+    }
+
     return true;
   } catch (err) {
+    if (deletedTopicFile && deleteAllEntries) {
+      console.error("Error deleting all entries");
+    }
     console.error(err);
     return false;
   }
