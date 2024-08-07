@@ -17,7 +17,6 @@ export function useEnsureFiles(objects: STORAGE_OBJECTS[]) {
           setIsLoading(false);
         }
       } catch (err) {
-        console.log("Caught");
         if (!isMounted) {
           setError(err as Error);
           setIsLoading(false);

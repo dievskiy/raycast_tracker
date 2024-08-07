@@ -36,8 +36,6 @@ export default function Command() {
   }
 
   function handleTopicChange(newValue: string): void {
-    console.log(newValue);
-
     const topic = topics.find((topic) => topic.name === newValue);
 
     if (topic === undefined) return;

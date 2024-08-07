@@ -8,7 +8,6 @@ export default function Command() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   function handleStop() {
-    console.log(selectedTopic);
     if (selectedTopic === null) {
       showToast(Toast.Style.Failure, "No topic selected", "Please select a topic");
       return;
@@ -37,7 +36,6 @@ export default function Command() {
   }
 
   function handleTopicChange(newValue: string): void {
-    console.log(newValue);
     const topic = topics.find((t) => t.name === newValue);
 
     if (topic === undefined) {
