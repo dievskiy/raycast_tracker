@@ -105,11 +105,12 @@ export function getEntriesForTopic(topicName: string, startDate: Date | null, en
     }
 
     const contents = fs.readFileSync(entriesPath(topicName));
-    console.log("Contents: " + contents.toString() + "Topic : " + topicName);
-
     const entries = JSON.parse(contents.toString());
 
-    console.log(entries);
+    entries.forEach((entry: TrackEntry) => {
+      entry.topicName = topicName;
+    });
+
     return entries.filter((entry: TrackEntry) => {
       const entryDate = new Date(entry.startTime);
 
@@ -165,6 +166,12 @@ export function stopTrackEntry(topic: Topic): boolean {
       entries = JSON.parse(contents.toString());
     }
     entries.push(entry);
+
+    // @ts-ignore
+    entries = entries.map((e) => {
+      delete e.topicName;
+      return e;
+    });
 
     fs.writeFileSync(entriesPath(topic.name), JSON.stringify(entries));
     fs.unlinkSync(entryPath);
