@@ -206,7 +206,9 @@ export function deleteTopic(topic: Topic, deleteAllEntries?: boolean): boolean {
     }
 
     const newTopics = topics.filter((t) => t.name !== topic.name);
-    fs.writeFileSync(TOPICS_PATH, JSON.stringify(newTopics));
+
+    if (newTopics.length === 0) fs.unlinkSync(TOPICS_PATH);
+    else fs.writeFileSync(TOPICS_PATH, JSON.stringify(newTopics));
 
     deletedTopicFile = true;
 
