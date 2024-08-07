@@ -15,13 +15,16 @@ export enum STORAGE_OBJECTS {
 
 const SUPPORT_PATH = environment.supportPath;
 const TOPICS_PATH = `${SUPPORT_PATH}/topics.json`;
-const DEFAULT_TOPICS = [{ name: "Work" }];
 
 const trackEntryPath = (topicName: string) => `${SUPPORT_PATH}/${topicName}.json`;
 const entriesPath = (topicName: string) => `${SUPPORT_PATH}/entries_${topicName}.json`;
 
+const getDefaultTopics = (): Topic[] => {
+  return [{ name: "Work", createdAt: Date.now() }];
+};
+
 const STORAGE_OBJECT_PATHS_MAP = new Map([
-  [STORAGE_OBJECTS.TOPICS, { path: TOPICS_PATH, defaultContent: JSON.stringify(DEFAULT_TOPICS) }],
+  [STORAGE_OBJECTS.TOPICS, { path: TOPICS_PATH, defaultContent: JSON.stringify(getDefaultTopics()) }],
 ]);
 
 export function ensureStorageObjectsExist(objects: STORAGE_OBJECTS[]): boolean {
