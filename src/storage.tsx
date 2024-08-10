@@ -29,7 +29,7 @@ const STORAGE_OBJECT_PATHS_MAP = new Map([
 
 export function ensureStorageObjectsExist(objects: STORAGE_OBJECTS[]): boolean {
   for (const storageObject of Object.values(objects)) {
-    let obj = STORAGE_OBJECT_PATHS_MAP.get(storageObject);
+    const obj = STORAGE_OBJECT_PATHS_MAP.get(storageObject);
     if (obj === undefined) {
       console.error(`Error getting object ${storageObject}`);
       return false;
@@ -167,7 +167,7 @@ export function stopTrackEntry(topic: Topic): boolean {
     }
     entries.push(entry);
 
-    // @ts-ignore
+    // @ts-expect-error Object is possibly 'null'.
     entries = entries.map((e) => {
       delete e.topicName;
       return e;

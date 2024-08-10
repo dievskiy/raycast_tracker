@@ -46,7 +46,7 @@ export default function Command() {
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create a new topic" onSubmit={addNewTopic} />
+          <Action.SubmitForm title="Create New Topic" onSubmit={addNewTopic} />
         </ActionPanel>
       }
     >

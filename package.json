@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "hours-tracker",
-  "title": "Hours tracker",
+  "title": "Hours Tracker",
   "description": "Track hours for different activities. Great plugin to track working hours or simply time spent reading research papers.",
   "icon": "command-icon.png",
   "author": "dievskiy",
@@ -12,36 +12,36 @@
   "commands": [
     {
       "name": "trackStart",
-      "title": "Track start",
-      "subtitle": "",
+      "title": "Track Start",
+      "subtitle": "Hours tracker",
       "description": "Start tracking hours",
       "mode": "view"
     },
     {
       "name": "trackStop",
-      "title": "Track stop",
-      "subtitle": "",
+      "title": "Track Stop",
+      "subtitle": "Hours tracker",
       "description": "Stop tracking hours",
       "mode": "view"
     },
     {
       "name": "topics",
-      "title": "Manage topics",
-      "subtitle": "",
-      "description": "anage tracking topics",
+      "title": "Manage Topics",
+      "subtitle": "Hours tracker",
+      "description": "Manage tracking topics",
       "mode": "view"
     },
     {
       "name": "addTopic",
-      "title": "Add topic",
-      "subtitle": "",
+      "title": "Add Topic",
+      "subtitle": "Hours tracker",
       "description": "Add new topic",
       "mode": "view"
     },
     {
       "name": "statistics",
-      "title": "View statistics",
-      "subtitle": "",
+      "title": "View Statistics",
+      "subtitle": "Hours tracker",
       "description": "View statistics for tracked hours",
       "mode": "view"
     }

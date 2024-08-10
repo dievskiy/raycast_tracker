@@ -1,4 +1,4 @@
-import { ActionPanel, showToast, Toast, Action, List, Icon, Detail, confirmAlert } from "@raycast/api";
+import { ActionPanel, showToast, Toast, Action, List, Icon, Detail, confirmAlert, Alert } from "@raycast/api";
 import { getTopics, deleteTopic, isTopicBeingTracked, STORAGE_OBJECTS } from "./storage";
 import { useEffect, useState } from "react";
 import { Topic } from "./types";
@@ -15,8 +15,7 @@ export default function Command() {
       message: `Are you sure you want to delete the topic "${topicToDelete.name}"? This will delete ALL tracked entries for this topic.`,
       primaryAction: {
         title: "Delete",
-        // @ts-ignore
-        style: Action.Style.Destructive,
+        style: Alert.ActionStyle.Destructive,
       },
     });
 
@@ -46,7 +45,8 @@ export default function Command() {
   }
 
   useEffect(() => {
-    let topics = getTopics();
+    const topics = getTopics();
+
     if (topics === null) {
       showToast(Toast.Style.Failure, "Error parsing topics", "Please create a topic");
       return;
@@ -81,7 +81,7 @@ function Actions(props: { item: Topic; handleDelete: () => void }) {
       <ActionPanel.Section>
         {props.item.name && (
           <Action
-            title="Delete topic"
+            title="Delete Topic"
             onAction={props.handleDelete}
             icon={Icon.Minus}
             style={Action.Style.Destructive}

@@ -56,7 +56,7 @@ export default function Command() {
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Start tracking" onSubmit={handleStart} />
+          <Action.SubmitForm title="Start Tracking" onSubmit={handleStart} />
         </ActionPanel>
       }
     >

@@ -1,5 +1,5 @@
 import { ActionPanel, showToast, Toast, Action, Form } from "@raycast/api";
-import { getTopics, getTrackEntry, startTrackEntry, stopTrackEntry } from "./storage";
+import { getTopics, getTrackEntry, stopTrackEntry } from "./storage";
 import { useEffect, useState } from "react";
 import { Topic } from "./types";
 
@@ -58,7 +58,7 @@ export default function Command() {
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Stop tracking" onSubmit={handleStop} />
+          <Action.SubmitForm title="Stop Tracking" onSubmit={handleStop} />
         </ActionPanel>
       }
     >

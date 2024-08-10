@@ -114,19 +114,26 @@ function EntriesSection({
   formatDuration: (totalSeconds: number) => string;
   handleDeleteEntry: (entry: TrackEntry) => void;
 }) {
+  function generateEntryTitle(entry: TrackEntry) {
+    if (entry.endTime === null) return "";
+
+    return `${format(entry.startTime, "MMM dd, yyyy HH:mm:ss")} - ${format(entry.endTime, "MMM dd, yyyy HH:mm:ss")}`;
+  }
+
   return (
     <List.Section title={`Entries (Page ${currentPage} of ${totalPages})`}>
       {paginatedEntries.map((entry) => (
         <List.Item
           key={entry.startTime.toString()}
-          title={`${format(entry.startTime, "MMM dd, yyyy HH:mm:ss")} - ${format(
-            entry.endTime!!,
-            "MMM dd, yyyy HH:mm:ss",
-          )}`}
-          accessories={[{ text: `${formatDuration(differenceInSeconds(entry.endTime!!, entry.startTime))}` }]}
+          title={generateEntryTitle(entry)}
+          accessories={
+            entry.endTime !== null
+              ? [{ text: `${formatDuration(differenceInSeconds(entry.endTime, entry.startTime))}` }]
+              : []
+          }
           actions={
             <ActionPanel>
-              <Action title="Delete entry" onAction={() => handleDeleteEntry(entry)} style={Action.Style.Destructive} />
+              <Action title="Delete Entry" onAction={() => handleDeleteEntry(entry)} style={Action.Style.Destructive} />
             </ActionPanel>
           }
         />
@@ -232,11 +239,16 @@ export default function TopicStatisticsView() {
       default:
         startDate = new Date(0);
     }
-    const fetchedEntries = getEntriesForTopic(selectedTopic, startDate, endDate).sort(
-      (a, b) => b.endTime!! - a.endTime!!,
+
+    const fetchedEntries = getEntriesForTopic(selectedTopic, startDate, endDate).sort((a, b) =>
+      a.endTime !== null && b.endTime !== null ? b.endTime - a.endTime : 0,
     );
+
     setEntries(fetchedEntries);
-    const total = fetchedEntries.reduce((sum, entry) => sum + differenceInSeconds(entry.endTime!!, entry.startTime), 0);
+    const total = fetchedEntries.reduce(
+      (sum, entry) => sum + (entry.endTime !== null ? differenceInSeconds(entry.endTime, entry.startTime) : 0),
+      0,
+    );
     setTotalTime(total);
     setCurrentPage(1);
   }
@@ -302,7 +314,7 @@ export default function TopicStatisticsView() {
             title={range.label}
             actions={
               <ActionPanel>
-                <Action title="Select starting date" onAction={() => handleDateRangeSelection(range)} />
+                <Action title="Select Starting Date" onAction={() => handleDateRangeSelection(range)} />
               </ActionPanel>
             }
           />
