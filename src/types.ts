@@ -1,5 +1,4 @@
 export interface TrackEntry {
-  topicName: string;
   startTime: number;
   endTime: number | null;
 }

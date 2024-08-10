@@ -273,7 +273,9 @@ export default function TopicStatisticsView() {
   }
 
   function handleDeleteEntry(entry: TrackEntry) {
-    const deleted = deleteEntry(entry);
+    if (selectedTopic === null) return;
+
+    const deleted = deleteEntry(entry, selectedTopic);
     if (!deleted) {
       showToast(Toast.Style.Failure, "Error deleting entry", "Please try again");
       return;
@@ -358,13 +360,15 @@ export default function TopicStatisticsView() {
         DateRangeSelector={DateRangeSelector}
       />
 
-      <EntriesSection
-        paginatedEntries={paginatedEntries}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        formatDuration={formatDuration}
-        handleDeleteEntry={handleDeleteEntry}
-      />
+      {selectedTopic && (
+        <EntriesSection
+          paginatedEntries={paginatedEntries}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          formatDuration={formatDuration}
+          handleDeleteEntry={handleDeleteEntry}
+        />
+      )}
 
       {totalPages > 1 && (
         <NavigationSection currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />

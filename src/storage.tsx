@@ -107,10 +107,6 @@ export function getEntriesForTopic(topicName: string, startDate: Date | null, en
     const contents = fs.readFileSync(entriesPath(topicName));
     const entries = JSON.parse(contents.toString());
 
-    entries.forEach((entry: TrackEntry) => {
-      entry.topicName = topicName;
-    });
-
     return entries.filter((entry: TrackEntry) => {
       const entryDate = new Date(entry.startTime);
 
@@ -134,12 +130,11 @@ export function getEntriesForTopic(topicName: string, startDate: Date | null, en
   }
 }
 
-export function deleteEntry(entry: TrackEntry): boolean {
+export function deleteEntry(entry: TrackEntry, topicName: string): boolean {
   try {
-    const topic = entry.topicName;
-    const entries = getEntriesForTopic(topic, null, null);
+    const entries = getEntriesForTopic(topicName, null, null);
     const newEntries = entries.filter((e) => e.startTime !== entry.startTime);
-    fs.writeFileSync(entriesPath(topic), JSON.stringify(newEntries));
+    fs.writeFileSync(entriesPath(topicName), JSON.stringify(newEntries));
     return true;
   } catch (err) {
     console.error(err);
@@ -153,11 +148,11 @@ export function isTopicBeingTracked(topic: Topic): boolean {
 
 export function stopTrackEntry(topic: Topic): boolean {
   try {
-    const entryPath = trackEntryPath(topic.name);
-    let entries = [];
+    const activeEntryPath = trackEntryPath(topic.name);
+    let entries: TrackEntry[] = [];
     let entry = null;
 
-    let contents = fs.readFileSync(entryPath);
+    let contents = fs.readFileSync(activeEntryPath);
     entry = JSON.parse(contents.toString());
     entry.endTime = Date.now();
 
@@ -167,14 +162,8 @@ export function stopTrackEntry(topic: Topic): boolean {
     }
     entries.push(entry);
 
-    // @ts-expect-error Object is possibly 'null'.
-    entries = entries.map((e) => {
-      delete e.topicName;
-      return e;
-    });
-
     fs.writeFileSync(entriesPath(topic.name), JSON.stringify(entries));
-    fs.unlinkSync(entryPath);
+    fs.unlinkSync(activeEntryPath);
 
     return true;
   } catch (err) {
@@ -186,7 +175,7 @@ export function stopTrackEntry(topic: Topic): boolean {
 export function startTrackEntry(topic: Topic): boolean {
   try {
     const startTime = Date.now();
-    const entry: TrackEntry = { topicName: topic.name, startTime: startTime, endTime: null };
+    const entry: TrackEntry = { startTime: startTime, endTime: null };
 
     fs.writeFileSync(trackEntryPath(topic.name), JSON.stringify(entry));
     return true;
