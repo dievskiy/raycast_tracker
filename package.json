@@ -6,7 +6,8 @@
   "icon": "extension-icon.png",
   "author": "dievskiy",
   "categories": [
-    "Productivity"
+    "Productivity",
+    "Applications"
   ],
   "license": "MIT",
   "commands": [
