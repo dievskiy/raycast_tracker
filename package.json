@@ -26,7 +26,7 @@
     },
     {
       "name": "topics",
-      "title": "Manage Topics",
+      "title": "Topics Management",
       "subtitle": "Hours tracker",
       "description": "Manage tracking topics",
       "mode": "view"
